@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Zash Loan - Sign In</title>
+  
+  <!-- PWA Manifest & Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00b4d8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Zash Loan">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- PWA Installation Alert Bar -->
+  <div id="pwaInstallBar" class="pwa-install-bar" style="display: none;">
+    <span>📱 Install <b>Zash Loan App</b> for faster access</span>
+    <button id="pwaInstallBtn" class="btn-install-pwa">Install App</button>
+  </div>
+
+  <!-- Main Mobile App Container -->
+  <div class="app-container">
+
+    <!-- ==================== SIGN IN VIEW (IMAGE 6) ==================== -->
+    <div id="screenLogin" class="view-screen active">
+      <div style="padding: 40px 20px 20px 20px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+        <div style="background: #ffffff; border-radius: 24px; padding: 32px 24px; box-shadow: var(--shadow-md); text-align: center;">
+          <div class="user-avatar-badge" style="width: 64px; height: 64px; margin: 0 auto 20px auto; border-radius: 18px;">
+            <img src="icon.svg" alt="Zash Loan Logo">
+          </div>
+
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Welcome Back!</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Sign in to continue your loan application</p>
+
+          <form onsubmit="handleLoginSubmit(event)">
+            <div class="form-group">
+              <label for="loginPhone" style="font-size: 13px; font-weight: 600; text-align: left; display: block; margin-bottom: 6px;">Phone Number (M-Pesa Registered)</label>
+              <input type="tel" id="loginPhone" class="form-input" style="padding-left: 16px; background: #f8fafc;" value="0791860050" required placeholder="0791860050">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+              <label for="loginPassword" style="font-size: 13px; font-weight: 600; text-align: left; display: block; margin-bottom: 6px;">Password</label>
+              <input type="password" id="loginPassword" class="form-input" style="padding-left: 16px; background: #f8fafc;" value="123456" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn-primary-gradient" style="margin: 0; width: 100%;">
+              &rarr;] Sign In
+            </button>
+          </form>
+
+          <div style="margin-top: 20px; font-size: 13px; display: flex; flex-direction: column; gap: 10px;">
+            <a href="#" onclick="showToast('🔑 Password reset link sent to your phone!')" style="color: #00b4d8; text-decoration: none; font-weight: 600;">Forgot Password?</a>
+            <div>
+              <span style="color: var(--text-muted);">Don't have an account? </span>
+              <a href="register.html" style="color: #00b4d8; text-decoration: none; font-weight: 700;">Sign up</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-footer" style="padding-bottom: 20px;">
+        <p>&copy; 2026 Zash Loan. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Floating Chat Widget Button -->
+    <button class="floating-chat-btn" id="floatingChatBtn" onclick="openChatModal()" title="Support Chat">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+    </button>
+
+  </div>
+
+  <!-- Modals -->
+  <div id="chatModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left; max-width: 400px; padding: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 16px; font-weight: 800;">Zash Loan Support</h3>
+        <button onclick="closeModal('chatModal')" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+      </div>
+      <div style="height: 220px; overflow-y: auto; background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 12px; font-size: 13px;">
+        <div style="background: #e0f7fa; color: #006064; padding: 10px; border-radius: 10px; margin-bottom: 10px; max-width: 85%;">
+          Hello! How can we assist you with your sign in today?
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" placeholder="Type a message..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+        <button class="btn-cyan-solid" style="width: auto; padding: 10px 16px;">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>

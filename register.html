@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zash Loan - Sign Up</title>
+
+  <!-- PWA Manifest & Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00b4d8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Zash Loan">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Register page specific styles */
+    .register-wrapper {
+      padding: 24px 20px 32px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+    .register-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 28px 22px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .register-logo {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 16px auto;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .register-logo img { width: 100%; height: 100%; object-fit: cover; }
+    .register-steps {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: background 0.3s;
+    }
+    .step-dot.active { background: #00b4d8; width: 20px; border-radius: 4px; }
+
+    .field-row { display: flex; gap: 10px; }
+    .field-row .form-group { flex: 1; }
+
+    .form-group { margin-bottom: 14px; text-align: left; }
+    .form-group label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input.form-input {
+      width: 100%;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .form-group input.form-input:focus { border-color: #00b4d8; }
+
+    .input-icon-wrap {
+      position: relative;
+    }
+    .input-icon-wrap .form-input { padding-right: 38px; }
+    .input-icon-wrap .toggle-eye {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-muted);
+      padding: 0;
+    }
+
+    .section-divider {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 18px 0 10px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    .terms-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      text-align: left;
+    }
+    .terms-row input[type="checkbox"] {
+      accent-color: #00b4d8;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .terms-row label { color: var(--text-muted); font-weight: 500; cursor: pointer; line-height: 1.4; }
+    .terms-row a { color: #00b4d8; text-decoration: underline; font-weight: 600; }
+
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+      margin-bottom: 4px;
+    }
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .trust-badge span { font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- PWA Installation Alert Bar -->
+  <div id="pwaInstallBar" class="pwa-install-bar" style="display: none;">
+    <span>📱 Install <b>Zash Loan App</b> for faster access</span>
+    <button id="pwaInstallBtn" class="btn-install-pwa">Install App</button>
+  </div>
+
+  <!-- Main Mobile App Container -->
+  <div class="app-container">
+
+    <!-- ==================== SIGN UP VIEW ==================== -->
+    <div id="screenRegister" class="view-screen active">
+      <div class="register-wrapper">
+        <div class="register-card">
+
+          <!-- Logo & Title -->
+          <div class="register-logo">
+            <img src="icon.svg" alt="Zash Loan Logo">
+          </div>
+          <h2 style="font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Create Your Account</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Join thousands getting instant mobile loans</p>
+
+          <!-- Progress Dots -->
+          <div class="register-steps">
+            <div class="step-dot active"></div>
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+          </div>
+
+          <!-- Registration Form -->
+          <form id="registerForm" onsubmit="handleRegisterSubmit(event)" novalidate>
+
+            <!-- Personal Info -->
+            <div class="section-divider">Personal Info</div>
+
+            <div class="field-row">
+              <div class="form-group">
+                <label for="regFirstName">First Name</label>
+                <input type="text" id="regFirstName" class="form-input" placeholder="First name" required autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label for="regLastName">Last Name</label>
+                <input type="text" id="regLastName" class="form-input" placeholder="Last name" required autocomplete="family-name">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="regEmail">Email Address</label>
+              <input type="email" id="regEmail" class="form-input" placeholder="you@example.com" autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label for="regIdNumber">National ID Number</label>
+              <input type="text" id="regIdNumber" class="form-input" placeholder="e.g. 27829489" required inputmode="numeric" pattern="[0-9]{7,8}">
+            </div>
+
+            <div class="form-group">
+              <label for="regDob">Date of Birth</label>
+              <input type="date" id="regDob" class="form-input" required>
+            </div>
+
+            <!-- Contact -->
+            <div class="section-divider">Contact &amp; M-Pesa</div>
+
+            <div class="form-group">
+              <label for="regPhone">Phone (M-Pesa Registered)</label>
+              <input type="tel" id="regPhone" class="form-input" placeholder="07XXXXXXXX" required autocomplete="tel" inputmode="tel">
+            </div>
+
+            <!-- Security -->
+            <div class="section-divider">Security</div>
+
+            <div class="form-group">
+              <label for="regPassword">Password</label>
+              <div class="input-icon-wrap">
+                <input type="password" id="regPassword" class="form-input" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                <button type="button" class="toggle-eye" onclick="togglePwd('regPassword', this)" title="Show/hide password">👁</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="regConfirmPassword">Confirm Password</label>
+              <div class="input-icon-wrap">
+                <input type="password" id="regConfirmPassword" class="form-input" placeholder="Repeat password" required minlength="6" autocomplete="new-password">
+                <button type="button" class="toggle-eye" onclick="togglePwd('regConfirmPassword', this)" title="Show/hide password">👁</button>
+              </div>
+            </div>
+
+            <!-- Terms -->
+            <div class="terms-row">
+              <input type="checkbox" id="regTerms" required>
+              <label for="regTerms">
+                I agree to the
+                <a href="#" onclick="openTermsModal(); return false;">Terms &amp; Conditions</a>
+                and
+                <a href="#" onclick="openPrivacyModal(); return false;">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-primary-gradient" style="margin: 0; width: 100%; font-size: 15px; padding: 14px;">
+              🚀 Create Account
+            </button>
+          </form>
+
+          <!-- Trust Badges -->
+          <div class="trust-badges">
+            <div class="trust-badge"><span>🔒</span> Secure SSL</div>
+            <div class="trust-badge"><span>✅</span> CBK Licensed</div>
+            <div class="trust-badge"><span>📲</span> Instant M-Pesa</div>
+          </div>
+
+          <!-- Sign in link -->
+          <div style="margin-top: 16px; font-size: 13px;">
+            <span style="color: var(--text-muted);">Already have an account? </span>
+            <a href="index.html" style="color: #00b4d8; text-decoration: none; font-weight: 700;">Sign In</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-footer" style="padding-bottom: 20px;">
+        <p>&copy; 2026 Zash Loan. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Floating Chat Widget Button -->
+    <button class="floating-chat-btn" id="floatingChatBtn" onclick="openChatModal()" title="Support Chat">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+    </button>
+
+  </div><!-- end app-container -->
+
+  <!-- Terms Modal -->
+  <div id="termsModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left; max-width: 400px;">
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;">Terms &amp; Conditions</h3>
+      <div style="max-height: 280px; overflow-y: auto; font-size: 12px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px;">
+        <p><b>1. Loan Limit &amp; Eligibility:</b> Loan limits are automatically generated based on your risk score and repayment history.</p>
+        <p style="margin-top: 8px;"><b>2. Savings Deposit:</b> A 5% security savings deposit is required to unlock your approved loan amount. Savings earn 10% APY interest.</p>
+        <p style="margin-top: 8px;"><b>3. Disbursement:</b> Approved funds are instantly sent to your registered M-Pesa mobile money account.</p>
+        <p style="margin-top: 8px;"><b>4. Repayment:</b> Loan repayment periods range from 7–30 days. Late repayment may attract penalty fees and affect your credit score.</p>
+        <p style="margin-top: 8px;"><b>5. Data Privacy:</b> Your personal data is protected under our Privacy Policy and shall not be shared with third parties without consent.</p>
+      </div>
+      <button class="btn-cyan-solid" onclick="closeModal('termsModal')">I Understand &amp; Accept</button>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div id="privacyModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left; max-width: 400px;">
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;">Privacy Policy</h3>
+      <div style="max-height: 280px; overflow-y: auto; font-size: 12px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px;">
+        <p><b>1. Data Collection:</b> We collect your name, ID number, phone number, and transaction history to provide our services.</p>
+        <p style="margin-top: 8px;"><b>2. Data Use:</b> Your data is used solely for identity verification, loan assessment, and communication.</p>
+        <p style="margin-top: 8px;"><b>3. Data Storage:</b> All data is encrypted and stored securely. We comply with Kenya's Data Protection Act 2019.</p>
+        <p style="margin-top: 8px;"><b>4. Third Parties:</b> We may share necessary data with M-Pesa (Safaricom) for payment processing only.</p>
+        <p style="margin-top: 8px;"><b>5. Your Rights:</b> You can request data deletion at any time by contacting support@zashloan.co.ke.</p>
+      </div>
+      <button class="btn-cyan-solid" onclick="closeModal('privacyModal')">Got It</button>
+    </div>
+  </div>
+
+  <!-- Chat Modal -->
+  <div id="chatModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left; max-width: 400px; padding: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 16px; font-weight: 800;">Zash Loan Support</h3>
+        <button onclick="closeModal('chatModal')" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+      </div>
+      <div style="height: 220px; overflow-y: auto; background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 12px; font-size: 13px;">
+        <div style="background: #e0f7fa; color: #006064; padding: 10px; border-radius: 10px; margin-bottom: 10px; max-width: 85%;">
+          Hello! How can we help you sign up today?
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" placeholder="Type a message..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+        <button class="btn-cyan-solid" style="width: auto; padding: 10px 16px;">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+  <script>
+    // Password visibility toggle
+    function togglePwd(fieldId, btn) {
+      const input = document.getElementById(fieldId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+      }
+    }
+
+    // Privacy Modal
+    function openPrivacyModal() {
+      document.getElementById('privacyModal').classList.add('active');
+    }
+
+    // Override handleRegisterSubmit with password validation
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const pwd = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regConfirmPassword').value;
+      if (pwd !== confirm) {
+        showToast('❌ Passwords do not match!');
+        return;
+      }
+      if (pwd.length < 6) {
+        showToast('❌ Password must be at least 6 characters!');
+        return;
+      }
+      const firstName = document.getElementById('regFirstName').value.trim();
+      const lastName = document.getElementById('regLastName').value.trim();
+      const fullName = (firstName + ' ' + lastName).toUpperCase();
+      const idNumber = document.getElementById('regIdNumber').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+
+      appState.user.name = fullName;
+      appState.user.idNumber = idNumber;
+      appState.user.phone = phone;
+      appState.user.email = email;
+      appState.user.maxLoanLimit = 15750;
+      appState.currentLoanSelection = 7500;
+      appState.isLoggedIn = true;
+      saveState();
+
+      showToast('🎉 Account created! Welcome to Zash Loan, ' + firstName + '!');
+      setTimeout(() => window.location.href = 'approved.html', 1200);
+    }, true);
+  </script>
+</body>
+</html>

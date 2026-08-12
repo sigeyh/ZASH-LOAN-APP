@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Zash Loan - Secure Your Loan</title>
+  
+  <!-- PWA Manifest & Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00b4d8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Zash Loan">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Main Mobile App Container -->
+  <div class="app-container">
+
+    <!-- ==================== SECURE YOUR LOAN / M-PESA (IMAGE 5) ==================== -->
+    <div id="screenSecureLoan" class="view-screen active">
+      <div style="padding: 16px 20px 0 20px;">
+        <a href="loan-select.html" class="back-btn" style="text-decoration: none; display: inline-flex; align-items: center;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          <span style="margin-left: 6px; font-size: 14px; font-weight: 600;">Back</span>
+        </a>
+      </div>
+
+      <div class="secure-loan-card" style="text-align: center;">
+        <div class="wallet-badge-icon">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        </div>
+
+        <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 6px;">Secure Your Loan</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+          A small savings deposit unlocks your loan instantly
+        </p>
+
+        <!-- Current Savings Card -->
+        <div style="background: linear-gradient(135deg, #00b4d8 0%, #00d2d3 100%); border-radius: 16px; padding: 18px; color: white; margin-bottom: 16px; text-align: left;">
+          <div style="font-size: 12px; font-weight: 600; opacity: 0.9; margin-bottom: 4px;">✨ Your Savings Balance</div>
+          <div style="font-size: 24px; font-weight: 800; margin-bottom: 4px;">KES <span class="savingsValDisplay">0</span></div>
+          <div style="font-size: 12px; opacity: 0.95;">Add <b>KES <span id="addMoreSavingsNeed">375</span></b> more to unlock</div>
+        </div>
+
+        <!-- Selected Loan Info Pill -->
+        <div style="background: #f1f5f9; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 16px;">
+          Loan Amount: <span style="color: #00b4d8;">KES <span id="depositTargetLoan">7,500</span></span>
+        </div>
+
+        <div style="background: #e0f7fa; border-radius: 12px; padding: 14px; font-size: 12px; color: #006064; line-height: 1.4; margin-bottom: 20px; text-align: left;">
+          Just a quick deposit and you're all set! We'll send a prompt to your phone.
+        </div>
+
+        <!-- M-Pesa Form Inputs -->
+        <form id="stkForm" onsubmit="triggerStkPush(event)">
+          <div class="form-group">
+            <label for="mpesaPhone" style="text-align: left; display: block;">M-Pesa Phone Number</label>
+            <div class="input-with-icon">
+              <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+              <input type="tel" id="mpesaPhone" class="form-input" placeholder="0791860050" value="0791860050" required pattern="^(?:254|\+254|0)?(7|1)\d{8}$">
+            </div>
+            <span class="input-hint" style="text-align: left; display: block;">Enter the number registered with M-Pesa</span>
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label for="depositAmount" style="text-align: left; display: block;">Amount to Save (KES)</label>
+            <input type="number" id="depositAmount" class="form-input" style="padding-left: 16px;" placeholder="Minimum KES 375" required min="10">
+          </div>
+
+          <button type="submit" class="btn-primary-gradient" style="margin: 0; width: 100%;">
+            ✨ Pay Now
+          </button>
+        </form>
+
+        <a href="loan-select.html" class="btn-outline-cyan" style="display: block; width: 100%; margin-top: 14px; text-decoration: none; box-sizing: border-box; text-align: center;">
+          &larr; Back to Loan Selection
+        </a>
+
+        <div style="background: #f8fafc; border-radius: 12px; padding: 14px; margin-top: 20px; font-size: 12px; color: var(--text-muted);">
+          Need help? Use the in-app support chat for assistance.
+        </div>
+      </div>
+
+      <div class="app-footer">
+        <p>&copy; 2026 Zash Loan. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#" class="footer-link" onclick="openTermsModal()">📄 Terms &amp; Conditions</a>
+          <a href="mailto:support@zashloan.co.ke" class="footer-link">✉️ support@zashloan.co.ke</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- M-Pesa STK Push Simulation Modal -->
+  <div id="stkModal" class="modal-overlay">
+    <div class="modal-content">
+      <div id="stkStepLoading">
+        <div class="spinner-ring"></div>
+        <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Sending M-Pesa Prompt</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+          Check your phone <b id="stkPhoneDisplay">0791860050</b> for an STK Push prompt to enter your M-Pesa PIN...
+        </p>
+        <div style="background: #e0f7fa; color: #006064; border-radius: 12px; padding: 12px; font-size: 12px; font-weight: 600;">
+          Deposit Amount: KES <span id="stkAmountDisplay">375</span>
+        </div>
+      </div>
+
+      <div id="stkStepSuccess" style="display: none;">
+        <div class="congrats-icon-circle" style="width: 56px; height: 56px; margin-bottom: 14px;">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Payment Received!</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+          Your savings balance of KES <span id="stkSuccessSavings">375</span> has been updated and your loan of KES <span id="stkSuccessLoan">7,500</span> is unlocked!
+        </p>
+        <button class="btn-primary-gradient" style="margin: 0; width: 100%;" onclick="closeStkModalAndDisburse()">
+          Disburse Loan to M-Pesa Now &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="termsModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left; max-width: 400px;">
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;">Terms &amp; Conditions</h3>
+      <div style="max-height: 250px; overflow-y: auto; font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px;">
+        <p>1. <b>Loan Limit &amp; Eligibility:</b> Loan limits are generated automatically based on system risk score.</p>
+        <p style="margin-top: 8px;">2. <b>Savings Deposit:</b> A 5% security savings deposit is required to unlock your approved loan amount. Savings earn 10% APY interest.</p>
+      </div>
+      <button class="btn-cyan-solid" onclick="closeModal('termsModal')">I Understand</button>
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
