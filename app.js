@@ -184,33 +184,53 @@ function selectPercentage(ratio) {
 // Authentication Handlers
 function handleLoginSubmit(e) {
   e.preventDefault();
-  const phone = document.getElementById('loginPhone').value || "0791860050";
+  const phone    = document.getElementById('loginPhone').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!phone) { showToast('⚠️ Please enter your phone number.'); return; }
+  if (!password) { showToast('⚠️ Please enter your password.'); return; }
+
+  // If a returning user's data is already in localStorage, keep it.
+  // Only set defaults if there's genuinely no saved name.
   appState.user.phone = phone;
-  appState.user.name = "ROWAN KIBET";
-  appState.user.maxLoanLimit = 15750;
-  appState.currentLoanSelection = 7500;
+  if (!appState.user.name) {
+    // Returning user not found — redirect to register
+    showToast('ℹ️ No account found. Please sign up first.');
+    setTimeout(() => window.location.href = 'register.html', 1200);
+    return;
+  }
   appState.isLoggedIn = true;
   saveState();
 
-  showToast(`👋 Welcome back, ${appState.user.name}!`);
+  showToast(`👋 Welcome back, ${appState.user.name.split(' ')[0]}!`);
   setTimeout(() => window.location.href = 'dashboard.html', 1000);
 }
 
 function handleRegisterSubmit(e) {
   e.preventDefault();
-  const fullName = document.getElementById('regFullName').value || "ROWAN KIBET";
-  const idNumber = document.getElementById('regIdNumber').value || "27829489";
-  const phone = document.getElementById('regPhone').value || "0791860050";
+  // Note: register.html overrides this via its own inline listener
+  // This is a fallback for any page that still uses the old form
+  const fullName = document.getElementById('regFullName') ?
+    (document.getElementById('regFirstName') ? 
+      (document.getElementById('regFirstName').value.trim() + ' ' + document.getElementById('regLastName').value.trim()).toUpperCase() :
+      document.getElementById('regFullName').value.trim().toUpperCase()) : '';
+  const idNumber = document.getElementById('regIdNumber') ? document.getElementById('regIdNumber').value.trim() : '';
+  const phone    = document.getElementById('regPhone')    ? document.getElementById('regPhone').value.trim()    : '';
 
-  appState.user.name = fullName;
+  if (!fullName || !idNumber || !phone) {
+    showToast('⚠️ Please fill in all required fields.');
+    return;
+  }
+
+  appState.user.name    = fullName;
   appState.user.idNumber = idNumber;
-  appState.user.phone = phone;
+  appState.user.phone   = phone;
   appState.user.maxLoanLimit = 15750;
   appState.currentLoanSelection = 7500;
   appState.isLoggedIn = true;
   saveState();
 
-  showToast(`🎉 Account created! Welcome to Zash Loan, ${fullName}.`);
+  showToast(`🎉 Account created! Welcome, ${fullName.split(' ')[0]}.`);
   setTimeout(() => window.location.href = 'approved.html', 1000);
 }
 
@@ -236,40 +256,140 @@ function proceedToFundSavings() {
   switchView('screenSecureLoan');
 }
 
-// Trigger M-Pesa STK Push Simulation
-function triggerStkPush(e) {
+// =============================================
+// MegaPay STK Push Integration
+// Account: Hakika | Till: 9824375
+// =============================================
+const MEGAPAY_API_KEY  = 'MGPYCN5rjePf';
+const MEGAPAY_TILL     = '9824375';
+const MEGAPAY_ENDPOINT = 'https://api.megapay.co.ke/v1/stkpush';
+const MEGAPAY_STATUS   = 'https://api.megapay.co.ke/v1/stkpush/status';
+
+/**
+ * Sends a real MegaPay STK Push request.
+ * @param {string} phone   - Kenyan phone number (07XX or 01XX)
+ * @param {number} amount  - Amount in KES
+ * @param {string} ref     - Description shown on M-Pesa prompt
+ * @returns {Promise<{checkoutId: string}>}
+ */
+async function megaPaySTK(phone, amount, ref) {
+  // Normalize phone to 254XXXXXXXXX format
+  let msisdn = phone.replace(/^0/, '254').replace(/^\+/, '');
+
+  const payload = {
+    api_key:       MEGAPAY_API_KEY,
+    till_number:   MEGAPAY_TILL,
+    phone:         msisdn,
+    amount:        amount,
+    account_ref:   ref || 'Zash Loan',
+    description:   ref || 'Zash Loan Deposit'
+  };
+
+  const res = await fetch(MEGAPAY_ENDPOINT, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`MegaPay error ${res.status}: ${txt}`);
+  }
+
+  return res.json(); // Expected: { checkoutId, message, ... }
+}
+
+/**
+ * Polls MegaPay for the final status of an STK push.
+ * Resolves with 'success' or 'failed'/'timeout'.
+ */
+async function pollStkStatus(checkoutId, maxWaitMs = 60000) {
+  const interval = 3000;
+  let elapsed    = 0;
+
+  return new Promise((resolve) => {
+    const timer = setInterval(async () => {
+      elapsed += interval;
+      try {
+        const res = await fetch(`${MEGAPAY_STATUS}/${checkoutId}`, {
+          headers: { 'Authorization': `Bearer ${MEGAPAY_API_KEY}` }
+        });
+        const data = await res.json();
+        const status = (data.status || '').toLowerCase();
+
+        if (status === 'success' || status === 'completed') {
+          clearInterval(timer);
+          resolve('success');
+        } else if (status === 'failed' || status === 'cancelled') {
+          clearInterval(timer);
+          resolve('failed');
+        }
+      } catch (_) { /* network hiccup, keep polling */ }
+
+      if (elapsed >= maxWaitMs) {
+        clearInterval(timer);
+        resolve('timeout');
+      }
+    }, interval);
+  });
+}
+
+// Real MegaPay STK Push — Savings Deposit
+async function triggerStkPush(e) {
   e.preventDefault();
-  const phone = document.getElementById('mpesaPhone').value || "0791860050";
+  const phone  = document.getElementById('mpesaPhone').value.trim()   || appState.user.phone;
   const amount = parseInt(document.getElementById('depositAmount').value) || 375;
 
-  document.getElementById('stkPhoneDisplay').textContent = phone;
+  if (!phone) { showToast('⚠️ Please enter your M-Pesa phone number.'); return; }
+
+  // Update modal preview
+  document.getElementById('stkPhoneDisplay').textContent  = phone;
   document.getElementById('stkAmountDisplay').textContent = formatMoney(amount);
 
-  // Show Modal & reset steps
+  // Show the loading state in modal
   document.getElementById('stkStepLoading').style.display = 'block';
   document.getElementById('stkStepSuccess').style.display = 'none';
   document.getElementById('stkModal').classList.add('active');
 
-  // Simulate M-Pesa STK Response timer (2.5 seconds)
-  setTimeout(() => {
-    // Deposit successful! Update state
-    appState.user.savingsBalance += amount;
-    appState.user.transactions.unshift({
-      id: "MPESA_" + Math.floor(100000 + Math.random() * 900000),
-      type: "Savings Deposit",
-      amount: amount,
-      date: new Date().toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-      status: "Successful"
-    });
+  try {
+    // 1. Initiate STK Push
+    const { checkoutId } = await megaPaySTK(phone, amount, 'Zash Savings Deposit');
+    showToast('📲 M-Pesa prompt sent! Enter your PIN.');
 
-    saveState();
+    // 2. Poll for result
+    const result = await pollStkStatus(checkoutId);
 
-    document.getElementById('stkSuccessSavings').textContent = formatMoney(appState.user.savingsBalance);
-    document.getElementById('stkSuccessLoan').textContent = formatMoney(appState.currentLoanSelection);
+    if (result === 'success') {
+      // Deposit confirmed — update state
+      appState.user.savingsBalance += amount;
+      appState.user.transactions.unshift({
+        id:     'MPESA_' + Math.floor(100000 + Math.random() * 900000),
+        type:   'Savings Deposit',
+        amount: amount,
+        date:   new Date().toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        status: 'Successful'
+      });
+      saveState();
 
-    document.getElementById('stkStepLoading').style.display = 'none';
-    document.getElementById('stkStepSuccess').style.display = 'block';
-  }, 2500);
+      document.getElementById('stkSuccessSavings').textContent = formatMoney(appState.user.savingsBalance);
+      document.getElementById('stkSuccessLoan').textContent    = formatMoney(appState.currentLoanSelection);
+
+      document.getElementById('stkStepLoading').style.display = 'none';
+      document.getElementById('stkStepSuccess').style.display = 'block';
+
+    } else if (result === 'timeout') {
+      document.getElementById('stkModal').classList.remove('active');
+      showToast('⏱️ Timed out waiting for payment. Please try again.');
+    } else {
+      document.getElementById('stkModal').classList.remove('active');
+      showToast('❌ Payment was cancelled or failed. Please try again.');
+    }
+
+  } catch (err) {
+    document.getElementById('stkModal').classList.remove('active');
+    console.error('MegaPay STK Error:', err);
+    showToast('⚠️ Payment request failed. Check your connection and retry.');
+  }
 }
 
 // Disburse Loan Action
@@ -386,32 +506,46 @@ function openWithdrawModal() {
   document.getElementById('withdrawModal').classList.add('active');
 }
 
-function handleRepaySubmit(e) {
+async function handleRepaySubmit(e) {
   e.preventDefault();
-  const phone = document.getElementById('repayPhone').value || "0791860050";
+  const phone  = document.getElementById('repayPhone').value.trim()  || appState.user.phone;
   const amount = parseInt(document.getElementById('repayAmount').value) || 0;
 
   if (amount <= 0) {
-    showToast("⚠️ Please enter a valid repayment amount");
+    showToast('⚠️ Please enter a valid repayment amount.');
     return;
   }
 
   closeModal('repayModal');
-  showToast(`⏳ Sending M-Pesa STK Push prompt to ${phone}...`);
+  showToast(`📲 Sending M-Pesa STK Push to ${phone}...`);
 
-  setTimeout(() => {
-    appState.user.activeLoan = null;
-    appState.user.transactions.unshift({
-      id: "REPAY_" + Math.floor(100000 + Math.random() * 900000),
-      type: "Loan Repayment",
-      amount: amount,
-      date: new Date().toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-      status: "Successful"
-    });
-    saveState();
-    renderTransactions();
-    showToast(`✅ Repayment of KES ${formatMoney(amount)} received! Your loan is fully cleared.`);
-  }, 2000);
+  try {
+    const { checkoutId } = await megaPaySTK(phone, amount, 'Zash Loan Repayment');
+    showToast('📲 M-Pesa prompt sent! Enter your PIN.');
+
+    const result = await pollStkStatus(checkoutId);
+
+    if (result === 'success') {
+      appState.user.activeLoan = null;
+      appState.user.transactions.unshift({
+        id:     'REPAY_' + Math.floor(100000 + Math.random() * 900000),
+        type:   'Loan Repayment',
+        amount: amount,
+        date:   new Date().toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        status: 'Successful'
+      });
+      saveState();
+      renderTransactions();
+      showToast(`✅ Repayment of KES ${formatMoney(amount)} received! Loan cleared.`);
+    } else if (result === 'timeout') {
+      showToast('⏱️ Timed out waiting for repayment. Please try again.');
+    } else {
+      showToast('❌ Repayment cancelled or failed. Please try again.');
+    }
+  } catch (err) {
+    console.error('MegaPay Repay Error:', err);
+    showToast('⚠️ Repayment request failed. Check your connection and retry.');
+  }
 }
 
 function handleWithdrawSubmit(e) {

@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Zash Loan - Loan Approved</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zash Loan - Loan Approved 🎉</title>
+
   <!-- PWA Manifest & Meta -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00b4d8">
@@ -16,47 +16,285 @@
 
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ---- Approved page overrides ---- */
+    body { overflow: hidden; }
+
+    .approved-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 20px 10px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* Animated radial glow background */
+    .approved-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(0,180,216,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Confetti burst animation */
+    @keyframes pop-in {
+      0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+      70%  { transform: scale(1.15) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(0,180,216,0.4); }
+      70%  { box-shadow: 0 0 0 20px rgba(0,180,216,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,180,216,0); }
+    }
+    @keyframes confetti-fall {
+      0%   { opacity: 1; transform: translateY(-30px) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(80px) rotate(360deg); }
+    }
+
+    .approved-icon-wrap {
+      animation: pop-in 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .approved-icon-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00b4d8, #0077b6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      animation: pulse-ring 2s ease-in-out infinite, float 3s ease-in-out infinite;
+      font-size: 44px;
+      box-shadow: 0 12px 40px rgba(0,180,216,0.35);
+    }
+
+    /* Confetti dots */
+    .confetti-dot {
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 2px;
+      animation: confetti-fall 2.5s ease-out infinite;
+    }
+    .confetti-dot:nth-child(1)  { left: 5%;  top: 10%; background:#00b4d8; animation-delay:0s; }
+    .confetti-dot:nth-child(2)  { left: 20%; top: 5%;  background:#ffd166; animation-delay:0.4s; transform:rotate(45deg); }
+    .confetti-dot:nth-child(3)  { left: 80%; top: 8%;  background:#06d6a0; animation-delay:0.2s; }
+    .confetti-dot:nth-child(4)  { left: 90%; top: 20%; background:#ef4444; animation-delay:0.7s; transform:rotate(30deg); }
+    .confetti-dot:nth-child(5)  { left: 50%; top: 2%;  background:#a78bfa; animation-delay:0.1s; }
+    .confetti-dot:nth-child(6)  { left: 65%; top: 6%;  background:#00b4d8; animation-delay:0.9s; border-radius:50%; }
+    .confetti-dot:nth-child(7)  { left: 35%; top: 3%;  background:#ffd166; animation-delay:0.5s; border-radius:50%; }
+    .confetti-dot:nth-child(8)  { left: 10%; top: 25%; background:#06d6a0; animation-delay:1.1s; }
+
+    .approved-title {
+      font-size: 28px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00b4d8, #0077b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .approved-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    /* Main limit badge */
+    .limit-card {
+      background: linear-gradient(135deg, #0077b6, #00b4d8);
+      border-radius: 20px;
+      padding: 22px 28px;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 20px;
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(0,119,182,0.35);
+      animation: float 4s ease-in-out infinite;
+    }
+    .limit-card .limit-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+    .limit-card .limit-amount {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .limit-card .limit-currency {
+      font-size: 20px;
+      font-weight: 700;
+      opacity: 0.9;
+      margin-right: 4px;
+    }
+    .limit-card .limit-meta {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+    }
+    .limit-card .limit-meta-item {
+      flex: 1;
+      background: rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .limit-card .limit-meta-item span {
+      display: block;
+      font-size: 14px;
+      font-weight: 900;
+      margin-top: 2px;
+    }
+
+    /* Perks row */
+    .perks-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 22px;
+    }
+    .perk-chip {
+      flex: 1;
+      background: var(--card-bg, #fff);
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      line-height: 1.4;
+    }
+    .perk-chip .perk-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+
+    /* CTA button */
+    .cta-btn {
+      width: 100%;
+      max-width: 320px;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      box-sizing: border-box;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .later-link {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .later-link:hover { color: #00b4d8; }
+  </style>
 </head>
 <body>
 
   <!-- Main Mobile App Container -->
   <div class="app-container">
 
-    <!-- ==================== CONGRATULATIONS APPROVAL (IMAGE 2) ==================== -->
-    <div id="screenCongrats" class="view-screen active">
-      <div style="padding: 16px 20px 0 20px;">
-        <a href="dashboard.html" class="back-btn" style="text-decoration: none; display: inline-flex; align-items: center;">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-          <span style="margin-left: 6px; font-size: 14px; font-weight: 600;">Back</span>
-        </a>
-      </div>
+    <!-- ==================== APPROVED SCREEN ==================== -->
+    <div id="screenApproved" class="view-screen active">
 
-      <div class="congrats-card">
-        <div class="congrats-icon-circle">
-          <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <div class="approved-wrapper">
+
+        <!-- Confetti dots -->
+        <div class="confetti-dot"></div>
+        <div class="confetti-dot"></div>
+        <div class="confetti-dot"></div>
+        <div class="confetti-dot"></div>
+        <div class="confetti-dot"></div>
+        <div class="confetti-dot"></div>
+        <div class="confetti-dot"></div>
+        <div class="confetti-dot"></div>
+
+        <!-- Success icon -->
+        <div class="approved-icon-wrap">
+          <div class="approved-icon-circle">🎉</div>
         </div>
 
-        <h2 class="congrats-title">Congratulations!</h2>
-        <p class="congrats-sub">Your loan application has been approved</p>
+        <!-- Text -->
+        <h1 class="approved-title">You're Approved!</h1>
+        <p class="approved-subtitle">
+          Congratulations, <strong id="approvedUserName">there</strong>!<br>
+          Your Zash Loan account is verified &amp; ready.
+        </p>
 
-        <div class="approved-limit-badge-card">
-          <h5>Your Loan Limit</h5>
-          <h2>KES <span class="maxLoanLimitDisplay">15,750</span></h2>
+        <!-- Limit Card -->
+        <div class="limit-card">
+          <div class="limit-label">Your Approved Loan Limit</div>
+          <div class="limit-amount">
+            <span class="limit-currency">KES</span>
+            <span class="maxLoanLimitDisplay">--</span>
+          </div>
+          <div class="limit-meta">
+            <div class="limit-meta-item">
+              Savings Required
+              <span>5% only</span>
+            </div>
+            <div class="limit-meta-item">
+              Interest Rate
+              <span>From 10%</span>
+            </div>
+            <div class="limit-meta-item">
+              Instant M-Pesa
+              <span>✅ Live</span>
+            </div>
+          </div>
         </div>
 
-        <div class="info-gray-box">
-          You can now borrow any amount up to your approved limit. Choose the amount you need in the next step.
+        <!-- Perks -->
+        <div class="perks-row">
+          <div class="perk-chip">
+            <span class="perk-icon">⚡</span>
+            Instant<br>Disbursement
+          </div>
+          <div class="perk-chip">
+            <span class="perk-icon">🔒</span>
+            Secure<br>Platform
+          </div>
+          <div class="perk-chip">
+            <span class="perk-icon">📈</span>
+            Grow Your<br>Limit
+          </div>
         </div>
 
-        <a href="loan-select.html" class="btn-primary-gradient" style="margin: 0; width: 100%; text-decoration: none; display: block; box-sizing: border-box; text-align: center;">
+        <!-- CTA -->
+        <a href="loan-select.html" class="btn-primary-gradient cta-btn">
           Choose Loan Amount &rarr;
         </a>
+
+        <a href="dashboard.html" class="later-link">Maybe later — go to Dashboard</a>
       </div>
 
-      <div class="app-footer">
+      <!-- Footer -->
+      <div class="app-footer" style="padding-bottom: 20px;">
         <p>&copy; 2026 Zash Loan. All rights reserved.</p>
         <div class="footer-links">
-          <a href="#" class="footer-link" onclick="openTermsModal()">📄 Terms &amp; Conditions</a>
           <a href="mailto:support@zashloan.co.ke" class="footer-link">✉️ support@zashloan.co.ke</a>
         </div>
       </div>
@@ -89,23 +327,23 @@
 
   </div>
 
-  <!-- Modals -->
+  <!-- Profile Modal -->
   <div id="profileModal" class="modal-overlay">
     <div class="modal-content" style="text-align: center; max-width: 380px;">
       <div class="user-avatar-badge" style="width: 72px; height: 72px; font-size: 24px; margin: 0 auto 12px auto; border-radius: 20px;">
         <img src="icon.svg" alt="Avatar">
       </div>
-      <h3 style="font-size: 20px; font-weight: 800;" class="userNameText">ROWAN KIBET</h3>
-      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">0791860050 • Verified User</p>
+      <h3 style="font-size: 20px; font-weight: 800;" class="userNameText">ZASH USER</h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;" id="profilePhoneText">• Verified User</p>
 
       <div style="background: #f8fafc; border-radius: 16px; padding: 16px; text-align: left; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
           <span style="color: var(--text-muted);">Credit Rating:</span>
           <span style="font-weight: 700; color: #10b981;">Excellent (850/900)</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px;">
           <span style="color: var(--text-muted);">Max Limit:</span>
-          <span style="font-weight: 700;">KES <span class="maxLoanLimitDisplay">15,750</span></span>
+          <span style="font-weight: 700;">KES <span class="maxLoanLimitDisplay">0</span></span>
         </div>
       </div>
 
@@ -116,18 +354,49 @@
     </div>
   </div>
 
+  <!-- Terms Modal -->
   <div id="termsModal" class="modal-overlay">
     <div class="modal-content" style="text-align: left; max-width: 400px;">
       <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;">Terms &amp; Conditions</h3>
       <div style="max-height: 250px; overflow-y: auto; font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px;">
-        <p>1. <b>Loan Limit &amp; Eligibility:</b> Loan limits are generated automatically based on system risk score.</p>
-        <p style="margin-top: 8px;">2. <b>Savings Deposit:</b> A 5% security savings deposit is required to unlock your approved loan amount. Savings earn 10% APY interest.</p>
+        <p><b>1. Loan Limit &amp; Eligibility:</b> Loan limits are generated automatically based on system risk score.</p>
+        <p style="margin-top: 8px;"><b>2. Savings Deposit:</b> A 5% security savings deposit is required to unlock your approved loan amount. Savings earn 10% APY interest.</p>
+        <p style="margin-top: 8px;"><b>3. Disbursement:</b> Approved funds are instantly sent to your registered M-Pesa mobile money account.</p>
       </div>
       <button class="btn-cyan-solid" onclick="closeModal('termsModal')">I Understand</button>
     </div>
   </div>
 
+  <!-- Chat Modal -->
+  <div id="chatModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left; max-width: 400px; padding: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 16px; font-weight: 800;">Zash Loan Support</h3>
+        <button onclick="closeModal('chatModal')" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+      </div>
+      <div style="height: 200px; overflow-y: auto; background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 12px; font-size: 13px;">
+        <div style="background: #e0f7fa; color: #006064; padding: 10px; border-radius: 10px; margin-bottom: 10px; max-width: 85%;">
+          🎉 Congratulations on your approval! How can we help you today?
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" placeholder="Type a message..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+        <button class="btn-cyan-solid" style="width: auto; padding: 10px 16px;">Send</button>
+      </div>
+    </div>
+  </div>
+
   <!-- App Script -->
   <script src="app.js"></script>
+  <script>
+    // Personalize the name on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameEl = document.getElementById('approvedUserName');
+      if (nameEl && appState.user.name) {
+        const firstName = appState.user.name.split(' ')[0];
+        nameEl.textContent = firstName || 'there';
+      }
+    });
+  </script>
 </body>
 </html>
