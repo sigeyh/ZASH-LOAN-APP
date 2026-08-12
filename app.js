@@ -244,8 +244,8 @@ function handleRegisterSubmit(e) {
   appState.user.name    = fullName;
   appState.user.idNumber = idNumber;
   appState.user.phone   = phone;
-  appState.user.maxLoanLimit = 15750;
-  appState.currentLoanSelection = 7500;
+  appState.user.maxLoanLimit = 0;
+  appState.currentLoanSelection = 0;
   appState.isLoggedIn = true;
   saveState();
 

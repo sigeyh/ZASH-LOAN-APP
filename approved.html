@@ -407,11 +407,17 @@
 
       // Simulate 5-second profile analysis
       setTimeout(() => {
-        // Random limit between 2000 and 15000
-        const min = 2000;
-        const max = 15000;
-        const steps = (max - min) / 100;
-        const randomLimit = Math.floor(Math.random() * (steps + 1)) * 100 + min;
+        // Weighted distribution: 90% get 2,000–5,500, 10% get 5,500–15,000
+        let randomLimit;
+        if (Math.random() < 0.9) {
+          // 90% tier: KES 2,000 – 5,500
+          const steps = (5500 - 2000) / 100;
+          randomLimit = Math.floor(Math.random() * (steps + 1)) * 100 + 2000;
+        } else {
+          // 10% tier: KES 5,500 – 15,000
+          const steps = (15000 - 5500) / 100;
+          randomLimit = Math.floor(Math.random() * (steps + 1)) * 100 + 5500;
+        }
 
         // Update global app state with random limit
         appState.user.maxLoanLimit = randomLimit;
