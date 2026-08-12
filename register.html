@@ -157,10 +157,20 @@
 </head>
 <body>
 
-  <!-- PWA Installation Alert Bar -->
-  <div id="pwaInstallBar" class="pwa-install-bar" style="display: none;">
-    <span>📱 Install <b>Zash Loan App</b> for faster access</span>
-    <button id="pwaInstallBtn" class="btn-install-pwa">Install App</button>
+  <!-- PWA Install Gate Modal -->
+  <div id="pwaInstallGate" class="pwa-install-gate hidden">
+    <div class="pwa-gate-logo">
+      <img src="icon.svg" alt="Zash Loan">
+    </div>
+    <h1 class="pwa-gate-title">Zash Loan</h1>
+    <p class="pwa-gate-subtitle">Install the app on your device for faster, secure access to instant mobile loans.</p>
+    <div class="pwa-gate-features">
+      <div class="pwa-gate-feature">⚡ Instant Loans</div>
+      <div class="pwa-gate-feature">🔒 Secure &amp; Encrypted</div>
+      <div class="pwa-gate-feature">📲 Works Offline</div>
+    </div>
+    <button id="pwaInstallBtn" class="btn-install-pwa-gate">📲 Install App to Continue</button>
+    <button id="pwaSkipBtn" class="pwa-gate-skip">Continue in browser</button>
   </div>
 
   <!-- Main Mobile App Container -->

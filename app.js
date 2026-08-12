@@ -617,27 +617,58 @@ function initPWA() {
       .catch((err) => console.error('SW Error:', err));
   }
 
-  let deferredPrompt;
-  const pwaBar = document.getElementById('pwaInstallBar');
-  const pwaBtn = document.getElementById('pwaInstallBtn');
+  // Don't show install gate if already running as standalone PWA
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+  if (isStandalone) return;
+
+  let deferredPrompt = null;
+  const gate    = document.getElementById('pwaInstallGate');
+  const installBtn = document.getElementById('pwaInstallBtn');
+  const skipBtn    = document.getElementById('pwaSkipBtn');
+
+  function showGate() {
+    if (gate) gate.classList.remove('hidden');
+  }
+
+  function hideGate() {
+    if (gate) gate.classList.add('hidden');
+  }
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (pwaBar) pwaBar.style.display = 'flex';
+    showGate();
   });
 
-  if (pwaBtn) {
-    pwaBtn.addEventListener('click', () => {
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            if (pwaBar) pwaBar.style.display = 'none';
-          }
-          deferredPrompt = null;
-        });
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        if (outcome === 'accepted') {
+          hideGate();
+          showToast('✅ App installed successfully!');
+        }
+        // If dismissed, keep gate visible so they can try again or skip
+      } else {
+        // Prompt not available (already installed / browser doesn't support)
+        hideGate();
       }
     });
   }
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', () => {
+      hideGate();
+      showToast('ℹ️ You can install the app anytime from your browser menu.');
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    hideGate();
+    deferredPrompt = null;
+  });
 }
+
