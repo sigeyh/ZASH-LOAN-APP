@@ -635,10 +635,12 @@ function initPWA() {
     if (gate) gate.classList.add('hidden');
   }
 
+  // Show the gate immediately if not in standalone mode
+  showGate();
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    showGate();
   });
 
   if (installBtn) {
@@ -651,10 +653,9 @@ function initPWA() {
           hideGate();
           showToast('✅ App installed successfully!');
         }
-        // If dismissed, keep gate visible so they can try again or skip
       } else {
-        // Prompt not available (already installed / browser doesn't support)
-        hideGate();
+        // Fallback for browsers that don't support beforeinstallprompt or already fired
+        showToast('ℹ️ Tap "Add to Home Screen" or "Install" from your browser menu.');
       }
     });
   }
