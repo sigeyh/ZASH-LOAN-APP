@@ -550,8 +550,9 @@ body {
 }
 
 .dash-action-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 20px rgba(0, 180, 216, 0.15);
+  border-color: #00b4d8;
 }
 
 .action-card-icon {
@@ -589,13 +590,42 @@ body {
 /* Cyan Savings Card Banner */
 .savings-card-banner {
   margin: 10px 20px 16px 20px;
-  background: linear-gradient(135deg, #00b4d8 0%, #00d2d3 100%);
+  background: linear-gradient(135deg, #03045e 0%, #00b4d8 100%);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 24px 20px;
   color: white;
-  box-shadow: 0 10px 25px rgba(0, 180, 216, 0.25);
+  box-shadow: 0 16px 32px rgba(0, 180, 216, 0.3);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.premium-card-bg-pattern {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+  pointer-events: none;
+}
+
+.premium-card-chip {
+  margin-bottom: 24px;
+}
+
+.badge-positive {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  vertical-align: middle;
+  margin-left: 8px;
 }
 
 .savings-card-top {
@@ -751,7 +781,7 @@ body {
 
 /* Bottom Navigation Bar */
 .bottom-nav-bar {
-  position: absolute;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;

@@ -220,7 +220,15 @@
     <!-- ==================== APPROVED SCREEN ==================== -->
     <div id="screenApproved" class="view-screen active">
 
-      <div class="approved-wrapper">
+      <!-- Loading View -->
+      <div id="loadingView" class="approved-wrapper" style="display: flex;">
+        <div class="spinner-ring" style="width: 60px; height: 60px; border-width: 6px; border-top-width: 6px;"></div>
+        <h2 style="font-size: 22px; font-weight: 800; margin-top: 24px;">Analyzing Profile...</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 8px; line-height: 1.5; max-width: 250px; margin-left: auto; margin-right: auto;">Connecting to credit bureaus and calculating your maximum loan limit.</p>
+      </div>
+
+      <!-- Success View -->
+      <div id="successView" class="approved-wrapper" style="display: none;">
 
         <!-- Confetti dots -->
         <div class="confetti-dot"></div>
@@ -389,13 +397,33 @@
   <!-- App Script -->
   <script src="app.js"></script>
   <script>
-    // Personalize the name on page load
     document.addEventListener('DOMContentLoaded', () => {
+      // Personalize the name
       const nameEl = document.getElementById('approvedUserName');
       if (nameEl && appState.user.name) {
         const firstName = appState.user.name.split(' ')[0];
         nameEl.textContent = firstName || 'there';
       }
+
+      // Simulate 5-second profile analysis
+      setTimeout(() => {
+        // Random limit between 2000 and 15000
+        const min = 2000;
+        const max = 15000;
+        const steps = (max - min) / 100;
+        const randomLimit = Math.floor(Math.random() * (steps + 1)) * 100 + min;
+
+        // Update global app state with random limit
+        appState.user.maxLoanLimit = randomLimit;
+        appState.currentLoanSelection = randomLimit; // system allocates max by default
+        saveState(); // This automatically calls updateUI() to populate the amount in the HTML
+
+        // Transition views
+        const loader = document.getElementById('loadingView');
+        const success = document.getElementById('successView');
+        if (loader) loader.style.display = 'none';
+        if (success) success.style.display = 'flex';
+      }, 5000);
     });
   </script>
 </body>

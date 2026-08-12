@@ -75,11 +75,23 @@ function initEventListeners() {
   const eyeBtn = document.getElementById('eyeToggleBtn');
   const themeBtn = document.getElementById('themeToggleBtn');
 
+  // Enforce dynamic max bounds when view loads
+  if (loanInput) {
+    loanInput.max = appState.user.maxLoanLimit;
+    // ensure it displays the correct current selection if initialized
+    loanInput.value = appState.currentLoanSelection;
+  }
+  if (loanSlider) {
+    loanSlider.max = appState.user.maxLoanLimit;
+    loanSlider.value = appState.currentLoanSelection;
+  }
+
   // Input Box Listener
   if (loanInput) {
     loanInput.addEventListener('input', (e) => {
       let val = parseInt(e.target.value) || 0;
       if (val > appState.user.maxLoanLimit) val = appState.user.maxLoanLimit;
+      if (val < 2000) val = 2000;
       appState.currentLoanSelection = val;
       if (loanSlider) loanSlider.value = val;
       updateCalculations();
@@ -129,7 +141,9 @@ function updateCalculations() {
   const elAddMoreNeed = document.getElementById('addMoreSavingsNeed');
   const elDepositTargetLoan = document.getElementById('depositTargetLoan');
   const elDepositAmountInput = document.getElementById('depositAmount');
+  const elSystemSelected = document.getElementById('systemSelectedLoanDisplay');
 
+  if (elSystemSelected) elSystemSelected.textContent = formatMoney(selectedLoan);
   if (elSummaryLoan) elSummaryLoan.textContent = formatMoney(selectedLoan);
   if (elSummaryReq) elSummaryReq.textContent = formatMoney(requiredSavings);
   if (elSummaryReceive) elSummaryReceive.textContent = formatMoney(selectedLoan);
