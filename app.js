@@ -142,6 +142,7 @@ function updateCalculations() {
   const elDepositTargetLoan = document.getElementById('depositTargetLoan');
   const elDepositAmountInput = document.getElementById('depositAmount');
   const elSystemSelected = document.getElementById('systemSelectedLoanDisplay');
+  const elStkAmount = document.getElementById('stkAmountDisplay');
 
   if (elSystemSelected) elSystemSelected.textContent = formatMoney(selectedLoan);
   if (elSummaryLoan) elSummaryLoan.textContent = formatMoney(selectedLoan);
@@ -149,13 +150,17 @@ function updateCalculations() {
   if (elSummaryReceive) elSummaryReceive.textContent = formatMoney(selectedLoan);
   if (elAlertReq) elAlertReq.textContent = formatMoney(requiredSavings);
   if (elAlertSelected) elAlertSelected.textContent = formatMoney(selectedLoan);
+  if (elStkAmount) elStkAmount.textContent = formatMoney(requiredSavings);
 
   const neededMore = Math.max(0, requiredSavings - appState.user.savingsBalance);
   if (elAddMoreNeed) elAddMoreNeed.textContent = formatMoney(neededMore);
   if (elDepositTargetLoan) elDepositTargetLoan.textContent = formatMoney(selectedLoan);
   
-  if (elDepositAmountInput && (!elDepositAmountInput.value || elDepositAmountInput.value === '197' || elDepositAmountInput.value === '375')) {
-    elDepositAmountInput.value = requiredSavings;
+  if (elDepositAmountInput) {
+    elDepositAmountInput.placeholder = `Minimum KES ${formatMoney(neededMore > 0 ? neededMore : requiredSavings)}`;
+    if (!elDepositAmountInput.value || elDepositAmountInput.value === '197' || elDepositAmountInput.value === '375') {
+       elDepositAmountInput.value = neededMore > 0 ? neededMore : requiredSavings;
+    }
   }
 
   // Update Slider Progress Fill Gradient
