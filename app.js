@@ -356,12 +356,8 @@ async function pollStkStatus(checkoutId, maxWaitMs = 60000) {
           resolve('failed');
         }
       } catch (err) {
-        console.warn('Status polling error/CORS block, fallback check active:', err);
-        // Fallback: If CORS blocks status query or endpoint is unreachable, auto-complete after 9 seconds.
-        if (elapsed >= 9000) {
-          clearInterval(timer);
-          resolve('success');
-        }
+        console.warn('Status polling error/CORS block:', err);
+        // Do not auto-succeed here anymore. We just let it loop until timeout.
       }
 
       if (elapsed >= maxWaitMs) {
@@ -424,28 +420,10 @@ async function triggerStkPush(e) {
     }
 
   } catch (err) {
-    console.error('MegaPay STK Error, running local fallback simulation:', err);
-    showToast('📲 Sending simulated STK push prompt. Standby...');
-
-    // Local sandbox simulation fallback (so the PWA works perfectly in browser environments without CORS proxies)
-    setTimeout(() => {
-      appState.user.savingsBalance += amount;
-      appState.user.transactions.unshift({
-        id:     'MPESA_MOCK_' + Math.floor(100000 + Math.random() * 900000),
-        type:   'Savings Deposit',
-        amount: amount,
-        date:   new Date().toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        status: 'Successful'
-      });
-      saveState();
-
-      document.getElementById('stkSuccessSavings').textContent = formatMoney(appState.user.savingsBalance);
-      document.getElementById('stkSuccessLoan').textContent    = formatMoney(appState.currentLoanSelection);
-
-      document.getElementById('stkStepLoading').style.display = 'none';
-      document.getElementById('stkStepSuccess').style.display = 'block';
-      showToast('✅ Deposit Mock Confirmation received!');
-    }, 6000);
+    console.error('MegaPay STK Error:', err);
+    document.getElementById('stkStepLoading').style.display = 'none';
+    document.getElementById('stkModal').classList.remove('active');
+    showToast('❌ Failed to initiate M-Pesa prompt. Please try again.');
   }
 }
 
