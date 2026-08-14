@@ -492,6 +492,14 @@ function updateUI() {
   const userNames = document.querySelectorAll('.userNameText');
   userNames.forEach((el) => el.textContent = appState.user.name);
 
+  const userPhones = document.querySelectorAll('.userPhoneText');
+  userPhones.forEach((el) => el.textContent = appState.user.phone);
+
+  ['mpesaPhone', 'repayPhone', 'withdrawPhone'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value && appState.user.phone) el.value = appState.user.phone;
+  });
+
   // Active Loan Status in Dashboard
   const statusTitle = document.getElementById('activeLoanStatusTitle');
   const statusDesc = document.getElementById('activeLoanStatusDesc');
@@ -607,7 +615,7 @@ async function handleRepaySubmit(e) {
 
 function handleWithdrawSubmit(e) {
   e.preventDefault();
-  const phone = document.getElementById('withdrawPhone').value || "0791860050";
+  const phone = document.getElementById('withdrawPhone').value || appState.user.phone;
   const amount = parseInt(document.getElementById('withdrawAmount').value) || 0;
 
   if (amount <= 0 || amount > appState.user.savingsBalance) {

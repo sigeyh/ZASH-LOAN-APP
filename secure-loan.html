@@ -63,7 +63,7 @@
             <label for="mpesaPhone" style="text-align: left; display: block;">M-Pesa Phone Number</label>
             <div class="input-with-icon">
               <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-              <input type="tel" id="mpesaPhone" class="form-input" placeholder="0791860050" value="0791860050" required pattern="^(?:254|\+254|0)?(7|1)\d{8}$">
+              <input type="tel" id="mpesaPhone" class="form-input" placeholder="07XXXXXXXX" required pattern="^(?:254|\+254|0)?(7|1)\d{8}$">
             </div>
             <span class="input-hint" style="text-align: left; display: block;">Enter the number registered with M-Pesa</span>
           </div>
@@ -105,7 +105,7 @@
         <div class="spinner-ring"></div>
         <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Sending M-Pesa Prompt</h3>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-          Check your phone <b id="stkPhoneDisplay">0791860050</b> for an STK Push prompt to enter your M-Pesa PIN...
+          Check your phone <b id="stkPhoneDisplay"></b> for an STK Push prompt to enter your M-Pesa PIN...
         </p>
         <div style="background: #e0f7fa; color: #006064; border-radius: 12px; padding: 12px; font-size: 12px; font-weight: 600;">
           Deposit Amount: KES <span id="stkAmountDisplay">375</span>
